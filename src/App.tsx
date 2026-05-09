@@ -5,9 +5,7 @@ import { Workspace } from "./components/layout/Workspace";
 export default function App() {
   return (
     <ConvexProvider client={convex}>
-      <div className="dark">
-        <Workspace />
-      </div>
+      <Workspace />
     </ConvexProvider>
   );
 }

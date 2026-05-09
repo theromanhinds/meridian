@@ -1,13 +1,14 @@
+import { useState } from "react";
 import { useFileTree } from "../../hooks/useFileTree";
 import { FolderGroup } from "./FolderGroup";
 import { SearchBar } from "./SearchBar";
 import { NewFileButton } from "./NewFileButton";
 
 const FOLDERS = [
-  { id: "notes", label: "Notes", icon: "📝" },
-  { id: "specs", label: "Specs", icon: "📋" },
-  { id: "prompts", label: "Agent Prompts", icon: "⚡" },
-  { id: "archive", label: "Archive", icon: "📦" },
+  { id: "notes",   label: "Notes" },
+  { id: "specs",   label: "Specs" },
+  { id: "prompts", label: "Prompts" },
+  { id: "archive", label: "Archive" },
 ];
 
 interface Props {
@@ -17,25 +18,28 @@ interface Props {
 
 export function FileTree({ activeSlug, onFileSelect }: Props) {
   const { files } = useFileTree();
+  const [composerOpen, setComposerOpen] = useState(false);
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-3 border-b border-[#2a2a2a]">
+      <div className="px-3 pt-3 pb-2">
         <SearchBar onSelect={onFileSelect} />
       </div>
-      <div className="flex-1 overflow-y-auto py-2">
+
+      <div className="flex-1 overflow-y-auto px-2 pt-1 pb-2">
         {FOLDERS.map(folder => (
           <FolderGroup
             key={folder.id}
             folder={folder}
-            files={files.filter((f: any) => f.folder === folder.id)}
+            files={files.filter((f: { folder: string }) => f.folder === folder.id)}
             activeSlug={activeSlug}
             onFileSelect={onFileSelect}
           />
         ))}
       </div>
-      <div className="p-3 border-t border-[#2a2a2a]">
-        <NewFileButton />
+
+      <div className="px-3 py-3 border-t border-line">
+        <NewFileButton open={composerOpen} onOpenChange={setComposerOpen} />
       </div>
     </div>
   );

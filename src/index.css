@@ -1,115 +1,464 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ════════════════════════════════════════════════════════════════════
+   MERIDIAN — Pure-grayscale, minimal design system
+   Inspired by Linear, Notion, Obsidian, Google Docs
+   ═══════════════════════════════════════════════════════════════════ */
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* ── Canvas (near-black) ─────────────────────────────────────── */
+  --bg-app:     #0A0A0B;
+  --bg-canvas:  #0C0C0D;
+  --bg-panel:   #0F0F11;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* ── Elevation: raised whites layered over canvas (no borders) ─ */
+  --layer-1: rgba(255, 255, 255, 0.030);   /* very subtle pill bg */
+  --layer-2: rgba(255, 255, 255, 0.055);   /* default raised pill */
+  --layer-3: rgba(255, 255, 255, 0.085);   /* hover / active */
+  --layer-4: rgba(255, 255, 255, 0.12);    /* selected / strong */
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  /* ── Hairlines (rare, only where structure demands) ──────────── */
+  --line:    rgba(255, 255, 255, 0.06);
+  --line-hi: rgba(255, 255, 255, 0.10);
+
+  /* ── Ink (text) ──────────────────────────────────────────────── */
+  --ink-1: #F4F4F5;                          /* primary */
+  --ink-2: rgba(244, 244, 245, 0.78);        /* secondary */
+  --ink-3: rgba(244, 244, 245, 0.58);        /* tertiary */
+  --ink-4: rgba(244, 244, 245, 0.38);        /* muted */
+  --ink-5: rgba(244, 244, 245, 0.22);        /* disabled */
+
+  /* ── Status (kept minimal — used only for diff & status pills) ─ */
+  --ok:          #6FCF8E;
+  --ok-soft:     rgba(111, 207, 142, 0.13);
+  --warn:        #E5C07B;
+  --warn-soft:   rgba(229, 192, 123, 0.13);
+  --danger:      #E88B7E;
+  --danger-soft: rgba(232, 139, 126, 0.13);
+
+  /* ── Focus ring (white-ish, low alpha) ───────────────────────── */
+  --focus-ring: rgba(255, 255, 255, 0.45);
+
+  /* ── Glass (popovers, drawers, modals) ───────────────────────── */
+  --glass-bg:        rgba(18, 18, 20, 0.86);
+  --glass-bg-strong: rgba(22, 22, 24, 0.92);
+
+  /* ── Shadows ─────────────────────────────────────────────────── */
+  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow-md:  0 4px 14px rgba(0, 0, 0, 0.36);
+  --shadow-lg:  0 16px 40px rgba(0, 0, 0, 0.55);
+  --shadow-xl:  0 24px 64px rgba(0, 0, 0, 0.70);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--line-hi);
+
+  /* ── Typography defaults ─────────────────────────────────────── */
+  color-scheme: dark;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  font-feature-settings: "cv11", "ss01", "ss03";
+  color: var(--ink-1);
+  background: var(--bg-app);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  text-rendering: optimizeLegibility;
+  font-synthesis: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-app);
+  overscroll-behavior: none;
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-app);
+}
+
+* { box-sizing: border-box; }
+
+::selection {
+  background: rgba(255, 255, 255, 0.18);
+  color: var(--ink-1);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* Slim grayscale scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.10) transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+@media (hover: hover) {
+  *::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.16); background-clip: padding-box; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   Component utilities
+   ═══════════════════════════════════════════════════════════════════ */
+@layer components {
+  /* ── Glass surfaces (used only for popovers, drawers, modals) ── */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(125%);
+    -webkit-backdrop-filter: blur(20px) saturate(125%);
+  }
+  .glass-strong {
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+  }
+
+  /* ── Pills (NO outlines — raised gray over dark bg) ───────────── */
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 h-8 text-sm font-medium;
+    background: var(--layer-2);
+    color: var(--ink-2);
+    transition: background 140ms, color 140ms;
+  }
+  @media (hover: hover) {
+    .pill:hover { background: var(--layer-3); color: var(--ink-1); }
+  }
+  .pill:active { background: var(--layer-3); }
+
+  .pill-icon {
+    @apply inline-flex items-center justify-center rounded-full;
+    width: 34px; height: 34px;
+    background: var(--layer-2);
+    color: var(--ink-2);
+    transition: background 140ms, color 140ms;
+  }
+  @media (hover: hover) {
+    .pill-icon:hover { background: var(--layer-3); color: var(--ink-1); }
+  }
+  .pill-icon:active { background: var(--layer-3); }
+
+  .pill-icon-sm {
+    @apply inline-flex items-center justify-center rounded-full;
+    width: 28px; height: 28px;
+    background: var(--layer-2);
+    color: var(--ink-2);
+    transition: background 140ms, color 140ms;
+  }
+  @media (hover: hover) {
+    .pill-icon-sm:hover { background: var(--layer-3); color: var(--ink-1); }
+  }
+
+  /* Ghost pill — invisible until hover (desktop only) */
+  .pill-ghost {
+    background: transparent;
+    color: var(--ink-3);
+  }
+  @media (hover: hover) {
+    .pill-ghost:hover { background: var(--layer-2); color: var(--ink-1); }
+  }
+
+  /* Primary pill — solid white-ish, used sparingly */
+  .pill-primary {
+    background: var(--ink-1);
+    color: #0A0A0B;
+  }
+  @media (hover: hover) {
+    .pill-primary:hover { background: #FFFFFF; }
+  }
+  .pill-primary:active { background: var(--ink-2); }
+
+  /* Selected/active list row state — soft raised, no border */
+  .row {
+    @apply rounded-md transition-colors duration-fast;
+    color: var(--ink-2);
+  }
+  @media (hover: hover) {
+    .row:hover { background: var(--layer-1); color: var(--ink-1); }
+  }
+  .row.is-active {
+    background: var(--layer-2);
+    color: var(--ink-1);
+  }
+
+  /* Labels (12px uppercase) — sidebar section headers */
+  .label-mute {
+    @apply text-2xs font-medium uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-4);
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2 h-[22px] text-xs font-medium;
+    background: var(--layer-1);
+    color: var(--ink-3);
+    letter-spacing: 0.005em;
+  }
+
+  /* Hairline divider (vertical & horizontal) */
+  .divider-h { background: var(--line); height: 1px; width: 100%; }
+  .divider-v { background: var(--line); width: 1px; height: 100%; }
+
+  /* Resize handle for desktop panes */
+  .resize-handle {
+    position: relative;
+    width: 1px;
+    cursor: col-resize;
+    flex-shrink: 0;
+    user-select: none;
+    background: var(--line);
+    z-index: 5;
+    transition: background 200ms;
+  }
+  .resize-handle::after {
+    content: "";
+    position: absolute;
+    inset: 0 -4px;
+  }
+  @media (hover: hover) {
+    .resize-handle:hover,
+    .resize-handle.is-dragging { background: var(--line-hi); }
+  }
+  .resize-handle.is-dragging { background: var(--ink-3); }
+
+  /* Inputs — flat, no borders */
+  .input-bare {
+    @apply bg-transparent text-ink-1 placeholder:text-ink-4 focus:outline-none;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   Animations
+   ═══════════════════════════════════════════════════════════════════ */
+@keyframes meridian-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(0.85); }
+  50%      { opacity: 1;    transform: scale(1); }
+}
+@keyframes meridian-fade-up {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes meridian-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes meridian-slide-right {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes meridian-slide-left {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.animate-pulse-dot   { animation: meridian-pulse 1.4s ease-in-out infinite; }
+.animate-fade-up     { animation: meridian-fade-up 180ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.animate-fade-in     { animation: meridian-fade-in 140ms ease-out both; }
+.animate-slide-right { animation: meridian-slide-right 240ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.animate-slide-left  { animation: meridian-slide-left 240ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.safe-top    { padding-top:    env(safe-area-inset-top); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+/* Disable text selection during drag operations */
+.dragging-no-select, .dragging-no-select * { user-select: none !important; }
+
+/* ════════════════════════════════════════════════════════════════════
+   Tiptap WYSIWYG editor surface — Notion/Obsidian-like
+   ═══════════════════════════════════════════════════════════════════ */
+.tiptap-editor {
+  height: 100%;
+  overflow-y: auto;
+  outline: none;
+  color: var(--ink-1);
+}
+.tiptap-editor .ProseMirror {
+  outline: none;
+  max-width: 760px;
   margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+  padding: 56px clamp(20px, 6vw, 80px) 240px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-1);
+  caret-color: var(--ink-1);
+  min-height: 100%;
+}
+.tiptap-editor .ProseMirror > * + * {
+  margin-top: 0.5em;
+}
+.tiptap-editor h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin: 1.6em 0 0.4em;
+  color: var(--ink-1);
+}
+.tiptap-editor h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  margin: 1.5em 0 0.4em;
+  color: var(--ink-1);
+}
+.tiptap-editor h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin: 1.2em 0 0.4em;
+  color: var(--ink-1);
+}
+.tiptap-editor p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink-1);
+}
+.tiptap-editor strong { font-weight: 600; color: var(--ink-1); }
+.tiptap-editor em     { font-style: italic; }
+.tiptap-editor s      { color: var(--ink-3); }
+.tiptap-editor a {
+  color: var(--ink-1);
+  text-decoration: underline;
+  text-decoration-color: var(--ink-4);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 140ms;
+}
+@media (hover: hover) {
+  .tiptap-editor a:hover { text-decoration-color: var(--ink-1); }
+}
+.tiptap-editor ul, .tiptap-editor ol {
+  padding-left: 1.6em;
+  margin: 0.4em 0;
+}
+.tiptap-editor ul li::marker { color: var(--ink-4); }
+.tiptap-editor ol li::marker { color: var(--ink-4); }
+.tiptap-editor ul[data-type="taskList"] {
+  padding-left: 0;
+  list-style: none;
+}
+.tiptap-editor ul[data-type="taskList"] li {
   display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  align-items: flex-start;
+  gap: 0.6em;
+  margin: 0.2em 0;
 }
-
-body {
-  margin: 0;
+.tiptap-editor ul[data-type="taskList"] li > label {
+  flex-shrink: 0;
+  margin-top: 0.35em;
+  user-select: none;
 }
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
+.tiptap-editor ul[data-type="taskList"] li > label > input[type="checkbox"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
   border-radius: 4px;
-  color: var(--text-h);
+  background: var(--layer-2);
+  cursor: pointer;
+  position: relative;
+  transition: background 140ms;
+}
+.tiptap-editor ul[data-type="taskList"] li > label > input[type="checkbox"]:checked {
+  background: var(--ink-1);
+}
+.tiptap-editor ul[data-type="taskList"] li > label > input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: url("data:image/svg+xml;utf8,<svg viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'><path d='M2 6l3 3 5-5' stroke='%230A0A0B' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
+}
+.tiptap-editor ul[data-type="taskList"] li > div {
+  flex: 1;
+  min-width: 0;
+}
+.tiptap-editor ul[data-type="taskList"] li[data-checked="true"] > div { color: var(--ink-3); text-decoration: line-through; }
+
+.tiptap-editor blockquote {
+  border-left: 2px solid var(--line-hi);
+  padding-left: 1em;
+  margin: 0.8em 0;
+  color: var(--ink-2);
+  font-style: italic;
+}
+.tiptap-editor code {
+  font-family: 'ui-monospace', 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  background: var(--layer-2);
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+  color: var(--ink-1);
+}
+.tiptap-editor pre {
+  background: var(--bg-canvas);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1em 1.2em;
+  margin: 0.8em 0;
+  overflow-x: auto;
+  font-family: 'ui-monospace', 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  line-height: 1.6;
+  color: var(--ink-1);
+}
+.tiptap-editor pre code {
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+.tiptap-editor hr {
+  border: none;
+  border-top: 1px solid var(--line-hi);
+  margin: 1.6em 0;
+}
+.tiptap-editor mark {
+  background: rgba(229, 192, 123, 0.20);
+  color: var(--ink-1);
+  border-radius: 3px;
+  padding: 0.05em 0.2em;
+}
+.tiptap-editor img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin: 0.6em 0;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* Placeholder for first empty paragraph */
+.tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--ink-4);
+  pointer-events: none;
+  height: 0;
 }
+
+/* Diff inline styling — used in DiffViewer */
+.diff-line { display: block; padding: 0.05em 0.4em; border-radius: 3px; }
+.diff-keep   { background: var(--ok-soft);     color: var(--ok); }
+.diff-remove { background: var(--danger-soft); color: var(--danger); text-decoration: line-through; }

@@ -8,7 +8,7 @@ interface Props {
 
 export function ChatPane({ fileSlug, className, onPendingDiff }: Props) {
   return (
-    <div className={`bg-[#0d0d0d] flex flex-col overflow-hidden ${className}`}>
+    <div className={`flex flex-col overflow-hidden ${className ?? ""}`}>
       <ChatWindow fileSlug={fileSlug} onPendingDiff={onPendingDiff} />
     </div>
   );

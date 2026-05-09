@@ -5,23 +5,35 @@ interface Message {
   agentUsed?: string;
 }
 
-interface Props { message: Message; }
+interface Props {
+  message: Message;
+  streaming?: boolean;
+}
 
-export function ChatMessage({ message }: Props) {
+export function ChatMessage({ message, streaming }: Props) {
   const isUser = message.role === "user";
+
+  if (isUser) {
+    return (
+      <div className="flex justify-end animate-fade-up">
+        <div className="max-w-[85%] rounded-xl rounded-tr-sm px-3 py-2 text-sm text-ink-1 leading-[1.55] bg-layer-3">
+          <div className="whitespace-pre-wrap break-words">{message.content}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+    <div className="animate-fade-up">
       <div
-        className={`max-w-[85%] rounded-lg px-3 py-2 text-sm leading-relaxed
-          ${isUser
-            ? "bg-[#7c6af720] text-[#e2e2e2] border border-[#7c6af730]"
-            : "bg-[#161616] text-[#ccc] border border-[#2a2a2a]"
-          }`}
+        className={`text-sm text-ink-1 leading-[1.7] whitespace-pre-wrap break-words ${
+          streaming ? "opacity-95" : ""
+        }`}
       >
-        {!isUser && message.agentUsed && (
-          <div className="text-xs text-[#555] mb-1">{message.agentUsed}</div>
+        {message.content}
+        {streaming && (
+          <span className="inline-block w-[2px] h-[1em] ml-0.5 align-middle bg-ink-1 animate-pulse-dot" />
         )}
-        <div className="whitespace-pre-wrap">{message.content}</div>
       </div>
     </div>
   );

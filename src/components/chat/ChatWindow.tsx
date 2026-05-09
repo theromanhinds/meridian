@@ -31,30 +31,46 @@ export function ChatWindow({ fileSlug, onPendingDiff }: Props) {
   const handleRequestRefine = () => {
     sendMessage(
       "Refine this document into a structured spec using the diff format (<keep> and <remove> tags).",
-      selectedAgent
+      selectedAgent,
     );
   };
 
   if (!fileSlug) {
     return (
-      <div className="flex items-center justify-center h-full text-[#333] text-sm">
-        Open a file to start chatting
+      <div className="flex flex-col h-full">
+        <header className="flex items-center px-4 h-12 border-b border-line flex-shrink-0">
+          <span className="label-mute">Assistant</span>
+        </header>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center px-8 max-w-xs">
+            <div className="w-10 h-10 mx-auto mb-3 rounded-full bg-layer-2 flex items-center justify-center text-ink-2">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+              </svg>
+            </div>
+            <p className="text-sm text-ink-1 font-medium">Open a file to chat</p>
+            <p className="text-xs text-ink-3 mt-1.5">
+              The assistant works with your active document.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between px-3 py-2 border-b border-[#2a2a2a]">
+      <header className="flex items-center justify-between px-3 h-12 border-b border-line flex-shrink-0 gap-2">
         <AgentSelector value={selectedAgent} onChange={setSelectedAgent} />
         <QuickActions fileSlug={fileSlug} onRequestRefine={handleRequestRefine} />
-      </div>
+      </header>
 
-      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3">
+      <div className="flex-1 overflow-y-auto px-4 py-5 space-y-4">
         {messages.length === 0 && (
-          <div className="text-[#333] text-sm text-center mt-8">
-            <p>Chat with {selectedAgent === "direct" ? "Gemini" : selectedAgent}</p>
-            <p className="mt-1 text-xs text-[#222]">Context: current file content</p>
+          <div className="text-center mt-2">
+            <p className="text-xs text-ink-4">
+              Conversing about <span className="text-ink-3">this file</span>
+            </p>
           </div>
         )}
         {messages.map((msg, i) => (
@@ -66,12 +82,24 @@ export function ChatWindow({ fileSlug, onPendingDiff }: Props) {
               role: "assistant",
               content: streamingContent,
               timestamp: Date.now(),
-              agentUsed: "streaming...",
+              agentUsed: "streaming",
             }}
+            streaming
           />
         )}
         {isStreaming && !streamingContent && (
-          <div className="text-[#7c6af7] text-sm animate-pulse">Thinking...</div>
+          <div className="flex items-center gap-2 px-1 py-1">
+            <span className="flex gap-1">
+              {[0, 1, 2].map(i => (
+                <span
+                  key={i}
+                  className="w-1.5 h-1.5 rounded-full bg-ink-3 animate-pulse-dot"
+                  style={{ animationDelay: `${i * 140}ms` }}
+                />
+              ))}
+            </span>
+            <span className="text-xs text-ink-4">Thinking…</span>
+          </div>
         )}
         <div ref={bottomRef} />
       </div>

@@ -2,12 +2,14 @@ interface Props { filename: string; }
 
 export function PromptBanner({ filename }: Props) {
   return (
-    <div className="flex items-center gap-3 px-4 py-2 bg-[#92400e20] border-b border-[#92400e50] text-sm">
-      <span className="text-[#fbbf24]">⚡</span>
-      <span className="text-[#fbbf24] font-medium">LIVE AGENT PROMPT</span>
-      <span className="text-[#888]">—</span>
-      <span className="text-[#aaa] font-mono text-xs">{filename}</span>
-      <span className="text-[#666] ml-2">Changes save directly to disk and take effect on next agent invocation.</span>
+    <div className="flex items-center gap-2 px-5 h-9 border-b border-line flex-shrink-0 bg-bg-canvas">
+      <span className="w-1.5 h-1.5 rounded-full bg-warn flex-shrink-0" />
+      <span className="text-xs text-ink-3">Agent prompt</span>
+      <span className="text-xs text-ink-4">·</span>
+      <span className="text-xs text-ink-3 font-mono truncate">{filename}</span>
+      <span className="ml-auto text-2xs text-ink-4 hidden sm:inline">
+        Changes apply on next invocation
+      </span>
     </div>
   );
 }

@@ -2,10 +2,31 @@ import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
-const FOLDERS = ["notes", "specs", "prompts", "archive"];
+const FOLDERS = [
+  { id: "notes",   label: "Notes" },
+  { id: "specs",   label: "Specs" },
+  { id: "prompts", label: "Prompts" },
+  { id: "archive", label: "Archive" },
+];
 
-export function NewFileButton() {
-  const [open, setOpen] = useState(false);
+function PlusIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+      <path d="M7 2v10M2 7h10" />
+    </svg>
+  );
+}
+
+interface Props {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function NewFileButton({ open: openProp, onOpenChange }: Props = {}) {
+  const [openState, setOpenState] = useState(false);
+  const open = openProp ?? openState;
+  const setOpen = onOpenChange ?? setOpenState;
+
   const [title, setTitle] = useState("");
   const [folder, setFolder] = useState("notes");
   const create = useMutation(api.files.create);
@@ -21,36 +42,49 @@ export function NewFileButton() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="w-full py-2 text-sm text-[#555] hover:text-[#7c6af7] border border-[#2a2a2a] hover:border-[#7c6af7] rounded transition-colors"
+        className="w-full flex items-center justify-center gap-2 h-9 pill-primary text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
       >
-        + New File
+        <PlusIcon />
+        <span>New file</span>
       </button>
     );
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 animate-fade-up">
       <input
         autoFocus
         value={title}
         onChange={e => setTitle(e.target.value)}
         onKeyDown={e => { if (e.key === "Enter") handleCreate(); if (e.key === "Escape") setOpen(false); }}
-        placeholder="File title..."
-        className="bg-[#0d0d0d] border border-[#7c6af7] rounded px-2 py-1.5 text-sm text-[#e2e2e2] placeholder-[#444] focus:outline-none"
+        placeholder="File title…"
+        className="bg-layer-2 rounded-md px-3 h-9 text-sm input-bare"
       />
-      <select
-        value={folder}
-        onChange={e => setFolder(e.target.value)}
-        className="bg-[#0d0d0d] border border-[#2a2a2a] rounded px-2 py-1.5 text-sm text-[#888] focus:outline-none"
-      >
-        {FOLDERS.map(f => <option key={f} value={f}>{f}</option>)}
-      </select>
+      <div className="flex gap-1.5 flex-wrap">
+        {FOLDERS.map(f => (
+          <button
+            key={f.id}
+            onClick={() => setFolder(f.id)}
+            className={`pill text-xs h-7 px-2.5 ${
+              folder === f.id ? "bg-layer-4 text-ink-1" : ""
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
       <div className="flex gap-2">
-        <button onClick={handleCreate} className="flex-1 py-1.5 bg-[#7c6af7] text-white text-sm rounded hover:bg-[#6b5ae6] transition-colors">
-          Create
-        </button>
-        <button onClick={() => setOpen(false)} className="flex-1 py-1.5 bg-[#2a2a2a] text-[#888] text-sm rounded hover:bg-[#333] transition-colors">
+        <button
+          onClick={() => setOpen(false)}
+          className="flex-1 h-9 pill text-sm justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+        >
           Cancel
+        </button>
+        <button
+          onClick={handleCreate}
+          className="flex-1 h-9 pill-primary rounded-full text-sm flex items-center justify-center font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+        >
+          Create
         </button>
       </div>
     </div>
