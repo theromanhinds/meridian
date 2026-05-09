@@ -34,7 +34,7 @@ export function useChatSession(fileSlug: string | null) {
     await addMessage({ fileId, role: "user", content: text, agentUsed: agent });
 
     const history = [...messages, { role: "user", content: text, timestamp: Date.now() }]
-      .map(m => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] }));
+      .map(m => ({ role: (m.role === "assistant" ? "model" : "user") as "user" | "model", parts: [{ text: m.content }] }));
 
     try {
       // Firebase Gemini (primary, free)

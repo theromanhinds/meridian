@@ -1,9 +1,12 @@
 import { httpAction } from "./_generated/server";
 
+// Convex server-side env var access
+declare const process: { env: Record<string, string | undefined> };
+
 // HTTP Action: AI provider router
 // Primary: Firebase Gemini (handled client-side — this endpoint is for server-side providers)
 // Future: Anthropic, Roman II VPS
-export const chat = httpAction(async (ctx, request) => {
+export const chat = httpAction(async (_ctx, request) => {
   // Handle CORS preflight
   if (request.method === "OPTIONS") {
     return new Response(null, {

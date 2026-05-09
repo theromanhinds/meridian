@@ -21,7 +21,7 @@ export function useOfflineSync() {
       const db = await openDB();
       const tx = db.transaction(STORE, "readwrite");
       const store = tx.objectStore(STORE);
-      const all: Array<{ fileId: Id<"files">; content: string }> = await store.getAll();
+      const all: Array<{ fileId: Id<"files">; content: string }> = await new Promise((res, rej) => { const r = store.getAll(); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
       for (const item of all) {
         try {
           await updateContent({ id: item.fileId, content: item.content });
