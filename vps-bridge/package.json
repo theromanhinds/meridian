@@ -1,0 +1,14 @@
+{
+  "name": "meridian-vps-bridge",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Meridian VPS bridge — watches Convex for spec_ready files",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "pm2": "pm2 start index.js --name meridian-bridge"
+  },
+  "dependencies": {
+    "convex": "^1.21.0"
+  }
+}
