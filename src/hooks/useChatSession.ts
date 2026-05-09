@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 import { useQuery, useMutation } from "convex/react";
-import { getGenerativeModel } from "firebase/ai";
-import { firebaseAI, AI_PROVIDERS } from "../lib/firebase";
+import { geminiClient } from "../lib/firebase";
 import { api } from "../../convex/_generated/api";
 import { hasDiffContent } from "../lib/diff";
 
@@ -37,9 +36,9 @@ export function useChatSession(fileSlug: string | null) {
       .map(m => ({ role: (m.role === "assistant" ? "model" : "user") as "user" | "model", parts: [{ text: m.content }] }));
 
     try {
-      // Firebase Gemini (primary, free)
-      if (agent === "direct" || !AI_PROVIDERS.roman_ii.available) {
-        const model = getGenerativeModel(firebaseAI, {
+      // Google AI Gemini (free tier — generativelanguage.googleapis.com)
+      if (agent === "direct" || agent === "learning") {
+        const model = geminiClient.getGenerativeModel({
           model: "gemini-2.0-flash",
           systemInstruction: buildSystemPrompt((file as any).content ?? ""),
         });

@@ -1,21 +1,11 @@
-import { initializeApp } from "firebase/app";
-import type { FirebaseApp } from "firebase/app";
-import { getAI, GoogleAIBackend } from "firebase/ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBS25BDFk27NNHrMQnr_08n8jkO5j8HPl4",
-  authDomain: "roman-ii.firebaseapp.com",
-  projectId: "roman-ii",
-  storageBucket: "roman-ii.firebasestorage.app",
-  messagingSenderId: "213147251705",
-  appId: "1:213147251705:web:5bbfa0e280b14f96108328",
-  measurementId: "G-XZDJ0PN2G9",
-};
+// Free Gemini API via Google AI Studio (generativelanguage.googleapis.com)
+// Get a free API key at https://aistudio.google.com/apikey
+// Set as VITE_GEMINI_API_KEY in .env.local and Netlify env vars
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string ?? "";
 
-export const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
-
-// Firebase AI Logic — Gemini via Google AI backend (free, no separate API key)
-export const firebaseAI = getAI(firebaseApp, { backend: new GoogleAIBackend() });
+export const geminiClient = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 // ─── AI Provider Router ─────────────────────────────────────────────────────
 // Add future providers here without touching component code.
